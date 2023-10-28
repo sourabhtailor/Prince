@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Data Entry Form</title>
+</head>
+<body>
+  <h1>Data Entry Form</h1>
+  <form id="data-form">
+    <input type="text" id="data-input" placeholder="Enter data" />
+    <button type="submit" id="save-button">Save Data</button>
+  </form>
+  <div id="response-message"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const dataForm = document.getElementById('data-form');
+      const saveButton = document.getElementById('save-button');
+      const responseMessage = document.getElementById('response-message');
+
+      saveButton.addEventListener('click', async function (e) {
+        e.preventDefault();
+        const dataInput = document.getElementById('data-input').value;
+
+        if (!dataInput) {
+          responseMessage.textContent = 'Please enter data.';
+          return;
+        }
+
+        responseMessage.textContent = 'Saving data...';
+
+        try {
+          const response = await sendDataToBackend(dataInput);
+
+          if (response.message) {
+            // Handle success (e.g., display a success message)
+            responseMessage.textContent = `Success: ${response.message}`;
+          } else {
+            // Handle error (e.g., display an error message)
+            responseMessage.textContent = `Error: ${response.error}`;
+          }
+        } catch (error) {
+          // Handle network or other errors
+          responseMessage.textContent = `Error: ${error.message}`;
+        }
+      });
+    });
+
+    async function sendDataToBackend(data) {
+      try {
+        const response = await fetch('/api/save-data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ data }),
+        });
+
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Failed to save data to the backend');
+        }
+      } catch (error) {
+        throw error;
+      }
+    }
+  </script>
+</body>
+</html>
+

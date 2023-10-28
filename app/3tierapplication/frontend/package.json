@@ -1,0 +1,9 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Frontend for the three-tier application",
+  "author": "Your Name",
+  "scripts": {},
+  "dependencies": {}
+}
+

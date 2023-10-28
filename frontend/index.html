@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Three-Tier Architecture Example</title>
+</head>
+<body>
+<h1>Welcome to the Presentation Layer</h1>
+<p>This is a simple presentation layer of a three-tier architecture example.</p>
+<p>Data retrieved from the application layer:</p>
+<ul id="data-list">
+</ul>
+<p>Add Data:</p>
+<input type="text" id="data-input" placeholder="Enter data">
+<button id="add-data">Add Data</button>
+<script>
+        // JavaScript to fetch data from the application layer and handle data addition
+        async function fetchData() {
+            const response = await fetch('/api/data');
+            const data = await response.json();
+            const dataList = document.getElementById('data-list');
+            dataList.innerHTML = '';
+ 
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = `ID: ${item.id}, Value: ${item.value}`;
+                dataList.appendChild(li);
+            });
+        }
+ 
+        async function addData() {
+            const value = document.getElementById('data-input').value;
+            const response = await fetch('/api/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ value })
+            });
+ 
+            if (response.ok) {
+                fetchData();
+            }
+        }
+ 
+        document.getElementById('add-data').addEventListener('click', addData);
+ 
+        fetchData();
+</script>
+</body>
+</html>

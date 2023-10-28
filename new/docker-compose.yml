@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+    frontend:
+      build:
+        context: ./frontend
+      ports:
+        - "80:80"
+      depends_on:
+          - backend
+    backend:
+      build:
+         context: ./backend
+      ports:
+        - "3000:3000"
+      environment:
+        DB_HOST: db
+        DB_USER: sourabh
+        DB_PASSWORD: redhat
+        DB_DATABASE: myappdb
+      depends_on:
+        - db
+    db:
+      image: mysql:latest
+      environment:
+        MYSQL_ROOT_PASSWORD: redhat
+        MYSQL_DATABASE: myappdb
+        MYSQL_USER: sourabh
+        MYSQL_PASSWORD: redhat
+      ports:
+        - "3306:3306"    
+      volumes:
+        - ./database/script.sql:/docker-entrypoint-initdb.d/script.sql    

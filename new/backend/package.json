@@ -9,7 +9,7 @@
   "author": "Your Name",
   "dependencies": {
     "express": "^4.17.1",
-    "mysql": "^2.18.1"
+    "mariadb": "^2.3.2" 
   }
 }
 

@@ -1,50 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Three-Tier Architecture Example</title>
+  <title>Three-Tier Architecture Example</title>
 </head>
 <body>
-<h1>Welcome to the Presentation Layer</h1>
-<p>This is a simple presentation layer of a three-tier architecture example.</p>
-<p>Data retrieved from the application layer:</p>
-<ul id="data-list">
-</ul>
-<p>Add Data:</p>
-<input type="text" id="data-input" placeholder="Enter data">
-<button id="add-data">Add Data</button>
-<script>
-        // JavaScript to fetch data from the application layer and handle data addition
-        async function fetchData() {
-            const response = await fetch('/api/data');
-            const data = await response.json();
-            const dataList = document.getElementById('data-list');
-            dataList.innerHTML = '';
- 
-            data.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = `ID: ${item.id}, Value: ${item.value}`;
-                dataList.appendChild(li);
-            });
+  <h1>Welcome to the Presentation Layer</h1>
+  <p>This is a simple presentation layer of a three-tier architecture example.</p>
+  <p>Data retrieved from the application layer:</p>
+  <ul id="data-list">
+  </ul>
+  <p>Add Data:</p>
+  <input type="text" id="data-input" placeholder="Enter data">
+  <button id="add-data">Add Data</button>
+
+  <script>
+    async function fetchData() {
+      try {
+        // Fetch data from the API endpoint.
+        const response = await fetch('/api/data');
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
         }
- 
-        async function addData() {
-            const value = document.getElementById('data-input').value;
-            const response = await fetch('/api/data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ value })
-            });
- 
-            if (response.ok) {
-                fetchData();
-            }
+
+        // Parse the JSON response.
+        const data = await response.json();
+        const dataList = document.getElementById('data-list');
+        dataList.innerHTML = '';
+
+        data.forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = `ID: ${item.id}, Value: ${item.value}`;
+          dataList.appendChild(li);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+
+    async function addData() {
+      try {
+        const value = document.getElementById('data-input').value;
+
+        // Send a POST request to add data.
+        const response = await fetch('/api/data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ value }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Failed to add data: ${response.status} ${response.statusText}`);
         }
- 
-        document.getElementById('add-data').addEventListener('click', addData);
- 
+
+        // Data added successfully, so fetch updated data.
         fetchData();
-</script>
+      } catch (error) {
+        console.error('Error adding data:', error);
+      }
+    }
+
+    // Add an event listener to the "Add Data" button.
+    document.getElementById('add-data').addEventListener('click', addData);
+
+    // Fetch data when the page loads.
+    fetchData();
+  </script>
 </body>
 </html>
+
